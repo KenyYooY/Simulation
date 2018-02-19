@@ -1,5 +1,6 @@
 subroutine SOR(a, b, x, n, eps, kpp, kp)
     !!! Test Git
+    !!! Olympic
     implicit real*8(a-h, o-z)
     dimension a(50, 50), b(50), x(50), xx(50)
     !!! Set optimized value of relaxation factor w
