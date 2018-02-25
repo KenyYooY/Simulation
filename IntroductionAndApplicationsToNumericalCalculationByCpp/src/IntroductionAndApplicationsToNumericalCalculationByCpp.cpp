@@ -570,11 +570,21 @@ int GaussSeidel(double *a, double *b, double *x, int n, double eps, int kpp){
 	return kp;
 }
 
-
+/*
+ * 反復解法による連立１次方程式の解： S.O.R(Successive Over-Relaxation)、逐次緩和法、外挿リープマン(Liebmann)法
+ * ガウス・ザイデル法の改良手法
+ * 最新の解xi(p)に重みw、ひとつ前の解x(p-1)に重み(1-w)をかけて、既知の近似解Xi(p)とする。
+ * Xi(p)=w*xi(p)+(1-w)*xi(p-1)
+ * 緩和パラメータw
+ * 	取り得る範囲 0 < w < 2
+ * 	1<w<2：過剰緩和
+ * 	0<w<1：過少緩和
+*/
 int SOR(double *a, double *b, double *x, int n, double eps, int kpp, double w=0.0){
 
 	double xx[n];
 
+	// w=0 なら緩和パラメータの最適値を用いる。
 	if(w==0.0){
 		double Pai=3.141516;
 		double s=Pai/n;
@@ -862,7 +872,6 @@ double *Get_Polynominal(double *a, int n, double b){
 	return a;
 }
 
-
 void Test_Get_Polynominal(){
 
 	int n;
@@ -890,7 +899,6 @@ void Test_Get_Polynominal(){
 
 	return;
 }
-
 
 void Interpolate_Lagrange(double xn[], double fn[], int n, double Pn[]){
 

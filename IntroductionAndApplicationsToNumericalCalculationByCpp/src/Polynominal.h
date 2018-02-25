@@ -15,6 +15,9 @@
 
 using namespace std;
 
+/*
+ * クラス：差分テーブル
+ */
 class DividedDifferencelTable{
 private:
 	int n;	// Number of Points ((x0,f0), (x1,f1), ... , (xn-1,fn-1)
@@ -317,7 +320,9 @@ void Test_Class_DividedDifferencelTable(){
 }
 
 
-// f(x) = a0 + a1*x + a2*x^2 + ... + an-1*x^(n-1)
+/*
+ * クラス：多項式　f(x) = a0 + a1*x + a2*x^2 + ... + an-1*x^(n-1)
+ */
 class Polynominal{
 private:
 //	int basis;
