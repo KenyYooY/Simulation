@@ -94,7 +94,9 @@ int Pivot(double *a, double *b, int n){
 
 }
 
-
+/*
+ * 初等解法による連立１次方程式の解：ガウス・ジョルダンの消去法
+ */
 int GaussJordan(double *a, int n, double *x){
 
 	double fmax;
@@ -154,7 +156,7 @@ int GaussJordan(double *a, int n, double *x){
 }
 
 void Test_GaussJordan(){
-
+// Test by WolframAlpha : x+3y-5z=-9,3w-2x+y+z=6,8w-5x-7y+2z=-15,w+x-2y-3z=-15
 	const int row = 4;
 	double array[row][row+1]={
 			{ 0.0 , 1.0 , 3.0 ,-5.0 ,-9.0},
@@ -255,7 +257,7 @@ int InverseMatrixByGaussJordan(double *a,int n, double *ainv){
 }
 
 void Test_InverseMatrixByGaussJordan(){
-
+// Test by WolframAlpha : inverse matrix[{0,2,3},{4,0,5},{1,2,0}]
 	const int row = 3;
 	double a[][row]={
 			{ 0.0 , 2.0 , 3.0 },
@@ -275,7 +277,13 @@ void Test_InverseMatrixByGaussJordan(){
 
 }
 
-
+/*
+ * 初等解法による連立１次方程式の解：LU分解
+ * 連立方程式Ax=b の係数行列Aを上三角行列U,下三角行列Uに分解(A=L・U)して
+ * 連立方程式を L・Ux=b とし、 Ux=x'とおき、Lx'=b とする。
+ * 下三角行列Lは既知のためLx'=bは一番上から解いていけて、x'が求まる。
+ * 上三角行列Uも既知のためUx=x'は一番下から解いていけて、xが求まる。
+ */
 int LU_Decomposition(double *a, int n, double *b, double *x){
 
 	double l[n][n], u[n][n];
@@ -349,7 +357,9 @@ int LU_Decomposition(double *a, int n, double *b, double *x){
 	return 1;
 }
 
-// Merge L,U Matrix to LU for reduce memory
+/*
+ * L,U分解の行列をメモリ削減のため１つの行列にまとめた
+ */
 int LU_Decomposition2(double *a, int n, double *b, double *x){
 
 	double lu[n][n];
@@ -424,6 +434,7 @@ void Test_LU_Decomposition(){
 	Pivot(a[0],b,n);
 */
 
+// Test by Wolfram Alpha : x+2y+3z=14,-x+z=2,3x+3y+4z=21
 	const int n = 3;
 	double a[n][n]={
 			{ 1.0, 2.0 , 3.0 },
@@ -451,7 +462,12 @@ void Test_LU_Decomposition(){
 
 }
 
-
+/*
+ * 反復解法による連立１次方程式の解： ヤコビ法
+ * 対角要素の行列A1と非対角要素の行列A2に分離して、第p近似解x(p)を
+ *	x(p)=A1^-1*b-A1^-1*A2*x(0)
+ * として求める。
+*/
 int JACOBI(double *a, double *b, double *x, int n, double eps, int kpp){
 
 	double xx[n];
@@ -500,7 +516,12 @@ int JACOBI(double *a, double *b, double *x, int n, double eps, int kpp){
 	return kp;
 }
 
-
+/*
+ * 反復解法による連立１次方程式の解： ガウス・ザイデル法
+ * ヤコビ法の改良手法
+ * ヤコビ法では反復pにおいて前の反復p-1での近似解xi(p-1)(i=1-n)を用いるが、
+ * ガウス・ザイデル法では反復pにおいて既に計算済みのm(<n)個までのxiはxi(p-1)ではなくxi(p)(i=1-m)を用いる。
+*/
 int GaussSeidel(double *a, double *b, double *x, int n, double eps, int kpp){
 
 	double xx[n];
@@ -614,6 +635,7 @@ void Test_JACOBI_GaussSeidel_SOR(){
 
 #define _TEST_SET_NUM_SOR_ 7
 #if _TEST_SET_NUM_SOR_ == 1
+	// Test by Wolfram Alpha : 7w+2x+-1y+1z=12,1w+5x+1y+-2z=6,2w+3x+8y+1z=36,2w+-2x+-1y+10z=35
 	const int n = 4;
 	double a[n][n]={
 			{7.0, 2.0,-1.0, 1.0},
@@ -671,7 +693,7 @@ void Test_JACOBI_GaussSeidel_SOR(){
 #endif
 
 
-	cout << "Input kpp : " << endl; cin >> kpp;
+	cout << "Input Maximum Iteration (kpp) : " << endl; cin >> kpp;
 
 
 	double x[n];
@@ -685,7 +707,7 @@ void Test_JACOBI_GaussSeidel_SOR(){
 	kp = JACOBI(a[0], b, x, n, 0.000001, kpp);
 	if(kp<kpp){
 		cout << "Converged@kp=" << kp << endl;
-		cout << "Solution Vectorx is" << endl; Print_Array_2D(x, n, 1);
+		cout << "Solution Vector x is" << endl; Print_Array_2D(x, n, 1);
 	}else{
 		cout << "Error" << endl;
 	}
@@ -694,7 +716,7 @@ void Test_JACOBI_GaussSeidel_SOR(){
 	kp = GaussSeidel(a[0], b, x, n, 0.000001, kpp);
 	if(kp<kpp){
 		cout << "Converged@kp=" << kp << endl;
-		cout << "Solution Vectorx is" << endl; Print_Array_2D(x, n, 1);
+		cout << "Solution Vector x is" << endl; Print_Array_2D(x, n, 1);
 	}else{
 		cout << "Error" << endl;
 	}
@@ -1052,10 +1074,10 @@ void Test_GetIntegralValue(){
 int main() {
 	cout << "!!! Welcome to Introduction and Applications to Numerical Calculations by C++!!!" << endl;
 
-	Test_GaussJordan();
+//	Test_GaussJordan();
 //	Test_LU_Decomposition();
 //	Test_InverseMatrixByGaussJordan();
-//	Test_JACOBI_GaussSeidel_SOR();
+	Test_JACOBI_GaussSeidel_SOR();
 //	Test_Interpolate_Lagrange();
 //	Test_Get_Polynominal();
 //	Test_Interpolate_Lagrange2();
